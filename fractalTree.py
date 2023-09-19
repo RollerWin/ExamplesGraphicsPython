@@ -1,50 +1,53 @@
 import turtle
 
-def draw_tree(branch_length, t):
-    if branch_length > 5:
-        # Рисуем основную ветку
-        t.forward(branch_length)
+branchSize = 5
+minBranchSize = 1
+mediumBranchSize = 2
 
-        # Поворачиваемся вправо
-        t.right(20)
+treeColor = "brown"
+branchColor = "green"
 
-        # Рисуем правую подветку рекурсивно
-        draw_tree(branch_length - 15, t)
+angleBetweenBranches = 30
+extendedAngleBetweenBranches = 60
 
-        # Поворачиваемся влево (в исходное положение)
-        t.left(40)
+brush = turtle.Turtle()
+brush.left(90)
+brush.speed(200)
+brush.pensize(branchSize)
+brush.color(treeColor)
+brush.shape("turtle")
 
-        # Рисуем левую подветку рекурсивно
-        draw_tree(branch_length - 15, t)
+def tree(i, branchSize):
+    if i < 10:
+        return
+    else:
+        branchSize = branchSize - 1 if branchSize > minBranchSize else minBranchSize
+        brush.pensize(branchSize)
+        
+        if branchSize == minBranchSize:
+            brush.color(branchColor)
+        else:
+            brush.color(treeColor)
 
-        # Возвращаемся в исходное положение
-        t.right(20)
+        brush.forward(i)
 
-        # Перемещаемся обратно к начальной точке
-        t.backward(branch_length)
+        if branchColor in brush.color():
+            brush.dot(10)
 
-def main():
-    screen = turtle.Screen()
-    screen.setup(width=800, height=600)
-    
-    t = turtle.Turtle()
-    t.speed(0)  # Максимальная скорость рисования
-    
-    # Поднимаем перо и перемещаемся в начальную позицию
-    t.penup()
-    t.goto(0, -200)
-    t.pendown()
+        brush.right(angleBetweenBranches)
+        tree(3 * i / 4, branchSize)
+        
+        if branchSize > mediumBranchSize:
+            brush.left(angleBetweenBranches)
+            tree(3 * i / 4, branchSize)
+            brush.left(angleBetweenBranches)
+        else:
+            brush.left(extendedAngleBetweenBranches)
 
-    # Устанавливаем угол обзора
-    t.setheading(90)
+        tree(3 * i / 4, branchSize)
+        brush.right(angleBetweenBranches)
+        brush.backward(i)
 
-    # Устанавливаем глубину рекурсии и длину начальной ветки
-    depth = 3
-    initial_branch_length = 100
 
-    draw_tree(initial_branch_length, t)
-
-    screen.exitonclick()
-
-if __name__ == "__main__":
-    main()
+tree(100, branchSize)
+turtle.done()
