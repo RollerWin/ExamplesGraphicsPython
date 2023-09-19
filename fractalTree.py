@@ -10,6 +10,7 @@ branchColor = "green"
 angleBetweenBranches = 30
 extendedAngleBetweenBranches = 60
 
+turtle.tracer(10, None)
 brush = turtle.Turtle()
 brush.left(90)
 brush.speed(200)
@@ -47,7 +48,6 @@ def tree(i, branchSize):
         tree(3 * i / 4, branchSize)
         brush.right(angleBetweenBranches)
         brush.backward(i)
-
 
 tree(100, branchSize)
 turtle.done()
