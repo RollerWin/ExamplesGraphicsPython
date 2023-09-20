@@ -1,53 +1,62 @@
+#ВАЖНО! Отредачьте код в из camelCase в snake_case. на питоне переменные записываются не как myNewVariable, а my_new_variable
+
+#Про алгоритм: Мы рекурсивно вызываем функцию отрисовки веток. В моей рекурсивной функции меняется цвет, толщина и количество веток.
+#То есть каждую итерацию при обходе толщина ветки уменьшается: 5, 4, 3, 2, 1 - branchSize
+#Я задал условие, если толщина ветки = 2, то вместо 3 веток за раз начинает генерироваться только 2.
+#А если толщина ветки = 1, то помимо изменённого количества веток, начинают дополнительно окрашиваться ветки в зелёный и отрисовываться листики - кружочки
+
 import turtle
 
-branchSize = 5
-minBranchSize = 1
-mediumBranchSize = 2
+#---Это всё опционально, можно всячески менять, экспериментировать. можно вовсе задать
+branchSize = 5 #указал отдельно толщину первого ствола
+minBranchSize = 1 #указал минимальную толщину ветки
+mediumBranchSize = 2 #указал среднюю толщину ветки
 
-treeColor = "brown"
-branchColor = "green"
+treeColor = "brown" #задаю цвет дерева
+branchColor = "green" #задаю цвет веток
 
-angleBetweenBranches = 30
-extendedAngleBetweenBranches = 60
+angleBetweenBranches = 30 #задаю стандартное расстояние в градусах между ветками (когда ветки 3, расстояние между каждой 30 градусов)
+extendedAngleBetweenBranches = 60 #задаю увеличенное расстояние между ветками (когда ветки 2, расстояние между каждой 60 градусов)
 
-turtle.tracer(10, None)
-brush = turtle.Turtle()
-brush.left(90)
-brush.speed(200)
-brush.pensize(branchSize)
-brush.color(treeColor)
-brush.shape("turtle")
+turtle.tracer(10, None) #tracer нужен для ускорения процесса отрисовки. он просто не отрисовывает определённое количество кадров. 10 то ли мс, то ли кадры, которые он намеренно не отрисовывает. Чем больше значение - тем быстрее будет рисовать
+brush = turtle.Turtle() #присваиваем переменной brush класс Turtle. Теперь мы будем всё отрисовывать при помощи brush
+brush.left(90) #изначально черепашка всегда повёрнута вправо. Чтобы она смотрела наверх, поворачиваем её на 90 градусов влево
+brush.speed(200) #назначаем скорость, с которой будет двигаться черпашка
+brush.pensize(branchSize) #назначаем толщину кисти как толщину первого ствола
+brush.color(treeColor) #назначаем цвет кисти
+brush.shape("turtle") #по приколу задали форму курсора в видео черепашки. необязательно
 
+#Рекурскивный алгоритм. Принимает в себя длину ветки и её толщину
 def tree(i, branchSize):
-    if i < 10:
+    if i < 10: #Идёт проверка: если длина ветки < 10px, то алгоритм сворачивается
         return
-    else:
-        branchSize = branchSize - 1 if branchSize > minBranchSize else minBranchSize
-        brush.pensize(branchSize)
+    else: #иначе начинает отрисовать над этой веткой ещё 2 или 3 ветки поменьше
+        branchSize = branchSize - 1 if branchSize > minBranchSize else minBranchSize #тернарный оператор проверки на толщину
+        brush.pensize(branchSize) #задание новой толщины
         
-        if branchSize == minBranchSize:
+        if branchSize == minBranchSize: #проверка, не минимального ли размера веточка? Если да, то меняем кисть на зелёную и окрашиваем маленькие ветки зелёным 
             brush.color(branchColor)
         else:
-            brush.color(treeColor)
+            brush.color(treeColor) #Если нет, то цвет у ветки будет коричневый
 
         brush.forward(i)
 
-        if branchColor in brush.color():
+        if branchColor in brush.color(): #Если цвет ветки зелёный, то дополнительно отрисовывается листочек
             brush.dot(10)
 
-        brush.right(angleBetweenBranches)
+        brush.right(angleBetweenBranches) #поворачиваем черепашку на 30 градусов вправо (отклоняем ветку в сторону) и запускаем эту функцию заново. Но размер ветки будет на 75% меньше
         tree(3 * i / 4, branchSize)
         
-        if branchSize > mediumBranchSize:
+        if branchSize > mediumBranchSize: #проверка, если размер ветки > 2, то отрисовываем дополнительную веточку
             brush.left(angleBetweenBranches)
             tree(3 * i / 4, branchSize)
             brush.left(angleBetweenBranches)
-        else:
+        else: # иначе поворачиваем черпашку и идёт отрисовывать дальше
             brush.left(extendedAngleBetweenBranches)
 
-        tree(3 * i / 4, branchSize)
+        tree(3 * i / 4, branchSize) #вызываем функцию для отрисовки веток поменьше
         brush.right(angleBetweenBranches)
-        brush.backward(i)
+        brush.backward(i) # возвращаемся к назад к исходной ветке
 
-tree(100, branchSize)
+tree(100, branchSize) # назначаем размер первой ветки. Длина - 100px, толщина - 5
 turtle.done()

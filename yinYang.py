@@ -1,6 +1,6 @@
 import turtle
 
-mainCircleRadius = 300
+mainCircleRadius = 300 #основной радиус, можно менять
 semiCircleRadius = mainCircleRadius / 2
 smallCircleRadius = mainCircleRadius / 5
 distanceBetweenCenterAndSmallCircle = 105
