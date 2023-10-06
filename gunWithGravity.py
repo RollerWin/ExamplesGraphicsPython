@@ -1,69 +1,90 @@
 import turtle
-import time
+import math
 
+#---Настройки окна----------------#
 screen = turtle.Screen()
 width=1280
 height=720
 screen.setup(width, height)
+#---------------------------------#
 
-current_angle = 0
-
+#---Создаём пушку-----------------#
 gun = turtle.Turtle()
+
 gun_position_x = -560
 gun_position_y = - 280
+current_angle = 0
+rotation_speed = 5
 
 gun.speed(0)
 gun.shape("square")
 gun.shapesize(2,5)
 gun.penup()
 gun.goto(gun_position_x, gun_position_y)
+gun.setheading(current_angle)
+#---------------------------------#
 
+#---Создаём класс пули и список пуль---#
+bullets = []
 
-bullet = turtle.Turtle()
-bullet_position_x = gun_position_x
-bullet_position_y = gun_position_y
-current_buller_time = 0
+class Bullet(turtle.Turtle):
+    def __init__(self, x, y, angle):
+        super().__init__()
+        self.penup()
+        self.goto(x, y)
+        self.shape("circle")
+        self.speed(0)
+        self.showturtle()
+        self.angle = angle
+        self.velocity = 40
+        self.time_interval = 0.1
+        self.g = 50  # Ускорение свободного падения (м/с^2)
 
-bullet.penup()
-bullet.speed(0)
-bullet.shape("circle")
-bullet.goto(bullet_position_x, bullet_position_y)
+    # Метод для движения снаряда
+    def move(self):
+        # Рассчитываем новые координаты снаряда
+        x = self.xcor() + self.velocity * self.time_interval * math.cos(math.radians(self.angle))
+        y = self.ycor() + self.velocity * self.time_interval * math.sin(math.radians(self.angle)) - 0.5 * self.g * (self.time_interval ** 2)
 
-def angle_up():
-    global current_angle
+        self.goto(x, y)
+#---------------------------------#
 
-    if current_angle >= 90:
-        current_angle = 90
-    else:
-        current_angle += 10
+#---Методы для поворота пушки-----#
+def gun_up():
+    if gun.heading() < 90:
+        gun.setheading(gun.heading() + rotation_speed)
 
-    gun.setheading(current_angle)
+def gun_down():
+    if gun.heading() > 0:
+        gun.setheading(gun.heading() - rotation_speed)
+#---------------------------------#
 
-def angle_down():
-    global current_angle
+#---------------------------------#
+def fire_bullet(x, y):
+    if -300 < y < -260 and -600 < x < 520:
+        angle = gun.heading()
+        x = gun.xcor()
+        y = gun.ycor()
+        bullet = Bullet(x, y, angle)
+        bullets.append(bullet)  # Добавляем снаряд в список активных снарядов
 
-    if current_angle <= 0:
-        current_angle = 0
-    else:
-        current_angle -= 10
+#---------------------------------#
 
-    gun.setheading(current_angle)
-
-def fire_bullet():
-    global bullet_position_x
-    global current_buller_time
-
-    while bullet_position_x != width/2:
-        bullet_position_x += 10
-        bullet.goto(bullet_position_x, bullet_position_y)
-
-        current_buller_time += 0.01
-        time.sleep(current_buller_time)  # Подождите некоторое время
-        screen.update()
-
-screen.onkey(angle_up, "w")
-screen.onkey(angle_down, "s")
-screen.onkey(fire_bullet, "q")
 screen.listen()
+screen.onkey(gun_up, "Up")
+screen.onkey(gun_down, "Down")
+# screen.onkey(fire_bullet, "space")
+screen.onclick(fire_bullet)
 
-turtle.done()
+# Запуск главного цикла программы
+while True:
+    # Двигаем все активные снаряды
+    for bullet in bullets:
+        bullet.move()
+        
+        # Проверяем, вышел ли снаряд за пределы экрана
+        if bullet.ycor() > height / 2 or bullet.xcor() > width / 2 or bullet.ycor() < - height / 2:
+            bullet.hideturtle()
+            bullets.remove(bullet)
+
+    screen.update()

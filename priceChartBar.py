@@ -30,7 +30,7 @@ brush.left(90)  # Поворачиваем черепаху на 90 градус
 brush.forward(500)  # Рисуем вертикальную линию оси стоимости
 
 brush.penup()
-brush.goto(-350,-167)
+brush.goto(-350,-165)
 brush.right(90)
 brush.pendown()
 
@@ -54,6 +54,7 @@ brush.pendown()
 
 brush.width(3)
 brush.left(45)
+brush.speed(1)
 
 def drawbar(step, color, current_price):
     brush.color(color)
@@ -66,7 +67,7 @@ if(current_price > default_price):
 else:
     drawbar(current_price + 40, bad_price_color, current_price)
 
-while 10:
+while True:
 
     previous_price = current_price
     current_price = random.randint(current_price - epsilon, current_price + epsilon)
