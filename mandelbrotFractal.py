@@ -11,16 +11,20 @@ screen.bgcolor("white")
 
 brush = turtle.Turtle()
 brush.speed(0)
-turtle.tracer(100000, None)
+turtle.tracer(10000, None)
 
 P = 200                     #размер [2*P +1 x 2*P + 1]
 scale = P / 2               #коэффициент масштабирования
-number_of_iteration = 100   #количество итераций
+number_of_iteration = 200   #количество итераций
 color_coefficient = 0.003921568627451
+x_shift = 0
+y_shift = 0
 
 def draw_fractal(P, scale, number_of_iteration):
-    for y in range(-P, P):
-        for x in range(-P, P):
+    brush.reset()
+
+    for y in range(-P - y_shift, P - y_shift):
+        for x in range(-P - x_shift, P - x_shift):
             a = x / scale
             b = y / scale
             c = complex(a, b)
@@ -35,11 +39,7 @@ def draw_fractal(P, scale, number_of_iteration):
                     break
             #-----------------------------------#
             if i == number_of_iteration - 1:
-                brush.penup()
-                brush.goto(x, y)
-                brush.pendown()
-                brush.color("black")
-                brush.dot()
+                draw_dot(x,y,0,0,0)
             # else:
             #     r = color_coefficient * ((i%2) * 32 + 128)
             #     g = color_coefficient * ((i%4) * 64)
@@ -51,26 +51,57 @@ def draw_fractal(P, scale, number_of_iteration):
             #     brush.color(r,g,b)
             #     brush.dot()
 
+#---Функция отрисовки каждой точки------------#
+def draw_dot(x,y,r,g,b):
+    brush.penup()
+    brush.goto(x + x_shift, y + y_shift)
+    brush.pendown()
+    brush.color(r,g,b)
+    brush.dot(2)
+#---------------------------------------------#
+
+#---Увеличение/Уменьшение картинки------------#
 def scale_up():
     global scale
-
-    screen.clear()
-    
-    scale /= 2
+    scale = scale * 1.2
     draw_fractal(P, scale, number_of_iteration)
 
 def scale_down():
     global scale
-
-    screen.clear()
-    
-    scale *= 2
+    scale = scale / 1.2
     draw_fractal(P, scale, number_of_iteration)
+#---------------------------------------------#
+
+#---Сдвиг Влево/Вправо/Вверх/Вниз-------------#
+def shift_left():
+    global x_shift
+    x_shift = x_shift - 50
+    draw_fractal(P, scale, number_of_iteration)
+
+def shift_right():
+    global x_shift
+    x_shift = x_shift + 50
+    draw_fractal(P, scale, number_of_iteration)
+
+def shift_up():
+    global y_shift
+    y_shift = y_shift + 50
+    draw_fractal(P, scale, number_of_iteration)
+
+def shift_down():
+    global y_shift
+    y_shift = y_shift - 50
+    draw_fractal(P, scale, number_of_iteration)
+#---------------------------------------------#
 
 draw_fractal(P, scale, number_of_iteration)
 
 screen.listen()
-screen.onkey(scale_up, "Up")
-screen.onkey(scale_down, "Down")
+screen.onkey(scale_up, "=")
+screen.onkey(scale_down, "-")
+screen.onkey(shift_left, "Left")
+screen.onkey(shift_right, "Right")
+screen.onkey(shift_up, "Up")
+screen.onkey(shift_down, "Down")
 
 turtle.done()
