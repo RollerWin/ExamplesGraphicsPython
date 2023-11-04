@@ -2,14 +2,15 @@ import turtle
 import random
 import math
 
-#---------------------------#
+#---Задаём общие значения---#
+previous_price = 0
 default_price = 300
-max_value = default_price + 20
-min_value = default_price - 20
-current_price = random.randint(min_value, max_value)
 epsilon = 20
-step = 15
-is_up = 0
+max_value = default_price + epsilon
+min_value = default_price - epsilon
+current_price = random.randint(min_value, max_value)
+
+is_up = 1
 
 left_x_coordinate = -400
 left_y_coordinate = -400
@@ -22,7 +23,9 @@ y_length = abs(left_y_coordinate) + right_y_coordinate
 
 good_price_color = "green"
 bad_price_color = "red"
+#---------------------------#
 
+#---Задаём настройки экрана-#
 screen = turtle.Screen()
 screen.setworldcoordinates(left_x_coordinate, left_y_coordinate, right_x_coordinate, right_y_coordinate)
 width = x_length + 300
@@ -31,6 +34,7 @@ screen.setup(width, height)
 brush = turtle.Turtle()
 #---------------------------#
 
+#---Отрисовываем поле-------#
 brush.speed(0)
 
 brush.penup()
@@ -82,7 +86,15 @@ for _ in range(y_length // 20):
     brush.penup()
     brush.forward(10)
     brush.pendown()
+#---------------------------#
 
+#---Отрисовка отдельной палки графика---#
+def draw_stick(step, color):
+    brush.color(color)
+    brush.forward(step / math.cos(math.pi / 6))
+#---------------------------#
+
+#---Задаём общие характеристики для нашей кисти при отрисовке---#
 brush.setheading(0)
 
 brush.penup()
@@ -92,47 +104,48 @@ brush.pendown()
 brush.width(3)
 brush.left(60)
 brush.speed(1)
-
-
-
-brush.forward(current_price / math.cos(math.pi / 6))
-brush.write(str(current_price))
-
-brush.right(120)
-brush.forward((25) / math.cos(math.pi / 6))
-brush.write(str(current_price - 25))
-
-
-#---------------------------#
-def drawbar(step, color):
-    brush.color(color)
-    brush.forward(step)
-    # brush.write(str(current_price))
 #---------------------------#
 
-# #---------------------------#
-# if(current_price > default_price):
-#     drawbar(current_price + 45, good_price_color, current_price)
-# else:
-#     drawbar(current_price + 45, bad_price_color, current_price)
+#---Изменение угла наклона отрисовки в зависимости от текущей стоимости---#
+def check_postion():
+    global is_up
 
-# while True:
+    if(not is_up and previous_price < current_price):
+        is_up = 1
+        brush.left(120)
+    elif(not is_up and previous_price >= current_price):
+        is_up = 0
+    elif(is_up and previous_price < current_price):
+        is_up = 1
+    elif(is_up and previous_price >= current_price):
+        is_up = 0
+        brush.right(120)
+#---------------------------#
 
-#     previous_price = current_price
-#     current_price = random.randint(current_price - epsilon, current_price + epsilon)
-#     step = abs(current_price - previous_price)
+#---Отрисовка новой цены целиком---#
+def draw_line():
+    global previous_price
+    global current_price
 
-#     if previous_price > current_price and not is_up:
-#         brush.right(120)
-#         is_up = 1
-#     elif previous_price < current_price and is_up:
-#         brush.left(120)
-#         is_up = 0
+    if(current_price > default_price):
+        if(previous_price <= default_price):
+            draw_stick(default_price - previous_price, bad_price_color)
+            draw_stick(current_price - default_price, good_price_color)
+        else:
+            draw_stick(abs(current_price - previous_price), good_price_color)
+    else:
+        if(previous_price > default_price):
+            draw_stick(previous_price - default_price, good_price_color)
+            draw_stick(default_price - current_price, bad_price_color)
+        else:
+            draw_stick(abs(previous_price - current_price), bad_price_color)
+    # brush.write(str(current_price)) #---по желанию можно включить отрисовку значения цены на каждом шаге
+    previous_price = current_price
+    current_price = random.randint(previous_price - epsilon, previous_price + epsilon)
+    check_postion()
+#---------------------------#
 
-#     if current_price >= default_price:
-#         drawbar(step, good_price_color, current_price)
-#     else:
-#         drawbar(step, bad_price_color, current_price)
-# #---------------------------#
+while (brush.xcor() <= right_x_coordinate and current_price > 0 and current_price < 800):
+    draw_line()
 
 turtle.done()
