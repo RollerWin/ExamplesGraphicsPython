@@ -3,9 +3,9 @@ const ctx = canvas.getContext('2d');
 const iterations = 100000; // Количество итераций
 
 function clearCanvas() {
-    ctx.fillStyle = 'black'; // Задний фон в черный цвет
+    ctx.fillStyle = 'black';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = 'green'; // Цвет точек - зеленый
+    ctx.fillStyle = 'green';
 }
 
 function drawBarnsleyFern() {
@@ -34,11 +34,8 @@ function drawBarnsleyFern() {
         x = nextX;
         y = nextY;
 
-        //---Пересчитываем координаты для отрисовки---//
         const screenX = canvas.width / 2 + x * 50 - 50;
         const screenY = canvas.height - y * 50 - 300;
-        //--------------------------------------------//
-        //---Рисуем точку-----------------------------//
         ctx.fillRect(screenX, screenY, 1, 1);
     }
 }

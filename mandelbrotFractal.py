@@ -40,16 +40,6 @@ def draw_fractal(P, scale, number_of_iteration):
             #-----------------------------------#
             if i == number_of_iteration - 1:
                 draw_dot(x,y,0,0,0)
-            # else:
-            #     r = color_coefficient * ((i%2) * 32 + 128)
-            #     g = color_coefficient * ((i%4) * 64)
-            #     b = color_coefficient * ((i%2) * 16 + 128)
-                    
-            #     brush.penup()
-            #     brush.goto(x, y)
-            #     brush.pendown()
-            #     brush.color(r,g,b)
-            #     brush.dot()
 
 #---Функция отрисовки каждой точки------------#
 def draw_dot(x,y,r,g,b):

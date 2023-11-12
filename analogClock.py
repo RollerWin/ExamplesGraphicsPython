@@ -32,7 +32,7 @@ second_hand.color("red")
 def draw_clock_face():
     clock_face = turtle.Turtle()
     clock_face.penup()
-    clock_face.speed(0)
+    #clock_face.speed(0)
     clock_face.color("black")
 
     for hour in range(1, 13):

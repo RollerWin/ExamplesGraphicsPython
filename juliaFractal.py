@@ -17,7 +17,6 @@ c = complex(-0.2, 0.75)
 P = 200                     #размер [2*P +1 x 2*P + 1]
 scale = P / 2               #коэффициент масштабирования
 number_of_iteration = 100   #количество итераций
-color_coefficient = 0.003921568627451
 x_shift = 0
 y_shift = 0
 
@@ -40,11 +39,6 @@ def draw_fractal(P, scale, number_of_iteration):
             #-----------------------------------#
             if i == number_of_iteration - 1:
                 draw_dot(x,y,0,0,0)
-            # else:
-            #     r = color_coefficient * ((i%2) * 32 + 128)
-            #     g = color_coefficient * ((i%4) * 64)
-            #     b = color_coefficient * ((i%2) * 16 + 128)
-            #     draw_dot(x,y,r,g,b)
 
 #---Функция отрисовки каждой точки------------#
 def draw_dot(x,y,r,g,b):
