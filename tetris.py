@@ -25,6 +25,7 @@ empty_tile_sign = 0
 filled_tile_sign = 1
 
 is_over = False
+score = 0
 #------------------------------------------------#
 
 #---Создание поля и фигур------------------------#
@@ -79,6 +80,10 @@ def checking_rows():
                 break
 
         if is_row_full:
+            global score 
+            score += 10
+            print(f"Ваш счёт: {score} очков")
+
             for i in range(y, 0, -1):
                 for j in range(tiles_x):
                     current_field[i][j] = current_field[i - 1][j]
@@ -183,13 +188,6 @@ while not is_over:
             for i in range(4):
                 current_field[current_figure[i].y][current_figure[i].x] = 1
 
-            for i in range(tiles_y):
-                for j in range(tiles_x):
-                    print(current_field[i][j], end='')
-                print()
-
-            print()
-
             random_index = random.randint(0,6)
             current_figure = [pygame.Rect(rect.x, rect.y, rect.width, rect.height) for rect in figures[random_index]]
             fall_delay = default_fall_delay
@@ -199,6 +197,7 @@ while not is_over:
         if current_figure[i].y == 0 and current_field[current_figure[i].y + 1][current_figure[i].x] == filled_tile_sign:
             is_over = True
             print("Игра окончена!")
+            print(f"Ваш финальный счёт: {score} очков")
             break
 
 
