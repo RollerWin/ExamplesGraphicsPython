@@ -55,7 +55,7 @@ while True:
             pygame.quit()
             quit()
 
-    glRotatef(1, 1, 0, 0)
+    glRotatef(1, 1, -1, 0)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     draw_cube()
     pygame.display.flip()
